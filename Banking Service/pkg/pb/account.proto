@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "./pkg/pb";
+
+enum TransactionType {
+    DEPOSIT = 0;
+    WITHDRAWAL = 1;
+}
+
+enum TransactionStatus {
+    PENDING = 0;
+    CONFIRMED = 1;
+    FAILED = 2;
+}
+
+service AccountService {
+    rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse);
+    rpc GetAccount(GetAccountRequest) returns (GetAccountResponse);
+    rpc UpdateBalance(UpdateBalanceRequest) returns (UpdateBalanceResponse);
+    rpc ProcessTransaction(ProcessTransactionRequest) returns (ProcessTransactionResponse);
+    rpc GetTransaction(GetTransactionRequest) returns (GetTransactionResponse);
+    rpc GetTransactionsByAccount(GetTransactionsByAccountRequest) returns (GetTransactionsByAccountResponse);
+}
+
+message Account {
+    uint64 id = 1;
+    string name = 2;
+    string primary_account_number = 3;
+    double balance = 4;
+}
+
+message CreateAccountRequest {
+    string name = 1;
+    string primary_account_number = 2;
+    double balance = 3;
+}
+
+message CreateAccountResponse {
+    uint64 account_id = 1;
+    string message = 2;
+}
+
+message GetAccountRequest {
+    uint64 id = 1;
+}
+
+message GetAccountResponse {
+    Account account = 1;
+}
+
+message UpdateBalanceRequest {
+    uint64 id = 1;
+    double amount = 2;
+}
+
+message UpdateBalanceResponse {
+    double updated_balance = 1;
+    string message = 2;
+}
+
+// TRANSACTION MESSAGES
+message Transaction {
+    uint64 id = 1;
+    uint64 account_id = 2;
+    TransactionType type = 3;
+    double amount = 4;
+    TransactionStatus status = 5;
+}
+
+message ProcessTransactionRequest {
+    uint64 account_id = 1;
+    TransactionType type = 2;
+    double amount = 3;
+}
+
+message ProcessTransactionResponse {
+    uint64 transaction_id = 1;
+    string message = 2;
+}
+
+message GetTransactionRequest {
+    uint64 id = 1;
+}
+
+message GetTransactionResponse {
+    Transaction transaction = 1;
+}
+
+message GetTransactionsByAccountRequest {
+    uint64 account_id = 1;
+}
+
+message GetTransactionsByAccountResponse {
+    repeated Transaction transactions = 1;
+}

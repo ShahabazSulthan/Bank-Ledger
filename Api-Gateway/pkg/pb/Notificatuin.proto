@@ -1,0 +1,30 @@
+syntax="proto3";
+
+package notif_proto;
+
+
+option go_package="./pkg/pb";
+
+
+service NotificationService{
+    rpc GetNotificationsForUser (RequestGetNotifications) returns (ResponseGetNotifications);
+}
+
+message RequestGetNotifications{
+    string AccountId=1;
+    uint64 Limit=2;
+    uint64 OffSet=3;
+}
+
+message TransactionLog {
+    string transaction_id = 1;
+    string account_id = 2;
+    double amount = 3;
+    string transaction_type = 4; 
+    string status = 5;           
+    string created_at = 6;
+}
+message ResponseGetNotifications{
+    repeated TransactionLog Notifications=1;
+    string ErrorMessage=2;
+}
